@@ -1,7 +1,8 @@
 Integrantes:
 
-Kaio Cesar de Sousa Pinheiro
-Matheus Ramos Cardoso Tinôco Cortez;
+> Kaio Cesar de Sousa Pinheiro
+
+> Matheus Ramos Cardoso Tinôco Cortez;
 
 Para reproduzir o projeto:
 
