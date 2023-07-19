@@ -207,7 +207,66 @@ void printMenu() {
     std::cout << "Enter your choice: ";
 }
 
-int main() {
+int main(int argc, char* argv[]) {
+
+    // código que eu fiz para funcionar ./program_name function_name < imgs/original_img_name.ppm > imgs_output/processed_img_name.ppm
+    // exemplo que era pra funcionar: ./procimg rotate < imgs/galinhos.ppm > imgs_output/rotate.ppm
+    // exemplo que tá funcionando (função fora da classe): ./procimg printMenu < imgs/galinhos.ppm > imgs_output/printMenu.ppm
+    //Image image();
+    // Check if the correct number of arguments is provided
+    if (argc < 2) {
+        std::cerr << "Usage: " << argv[0] << " <function_name>\n";
+        return 1;
+    }
+
+    // Extract command line argument for function name
+    std::string function_name = argv[1];
+
+    // Open input image file from standard input
+    std::ifstream inputFile;
+    inputFile.open("/dev/stdin");
+    if (!inputFile) {
+        std::cerr << "Error: Failed to open input image file.\n";
+        return 0;
+    }
+
+    // Open output image file from standard output
+    std::ofstream outputFile;
+    outputFile.open("/dev/stdout");
+    if (!outputFile) {
+        std::cerr << "Error: Failed to open output image file.\n";
+        return 0;
+    }
+
+
+    if (function_name == "printMenu") {
+        printMenu();
+    }
+    /*
+    // Determine which image processing function to call based on function_name
+    if (function_name == "grayscale") {
+        image.grayscale();//inputFile, outputFile);
+    } else if (function_name == "enlarge") {
+        image.enlarge();//inputFile, outputFile);
+    } else if (function_name == "reduce") {
+        image.reduce();//inputFile, outputFile);
+    } else if (function_name == "rotate") {
+        image.rotate();//inputFile, outputFile);
+    } else if (function_name == "applyBlurringFilter") {
+        image.applyBlurringFilter();//inputFile, outputFile);
+    } else if (function_name == "applySharpeningFilter") {
+        image.applySharpeningFilter();//inputFile, outputFile);
+    } else {
+        std::cerr << "Error: Invalid function name.\n";
+        return 1;
+    }
+    */
+
+    // Close input and output files (not necessary for standard input and output)
+    inputFile.close();
+    outputFile.close();
+
+    /* // o código que o Kaio fez inicialmente:
     std::string filename;
     std::cout << "Enter the filename of the image (PPM format): ";
     std::cin >> filename;
@@ -261,6 +320,8 @@ int main() {
     image.writePPM(outputFilename);
 
     std::cout << "Image saved to " << outputFilename << std::endl;
+
+    */
 
     return 0;
 }
