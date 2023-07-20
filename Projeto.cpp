@@ -1,8 +1,6 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <fstream>
-#include <sstream>
 
 struct Pixel {
     int red;
@@ -28,6 +26,8 @@ public:
         pixels[index].blue = b;
     }
 
+    // A função de leitura vai ler através do cin o conteúdo do que vem à direita de '<'
+    // no script do console
     void readPPM(){
         std::string format;
         int maxValue;
@@ -42,22 +42,28 @@ public:
         }
     }
 
-    void printPPM() {//const std::string& filename) {
+    // o que vem à direita de '>' no console é o nome do arquivo no qual armazenaremos
+    // o resultado do processamento da imagem, e a função de print é a responsável
+    // por dar o cout. devido ao '>', ao invés de escrever no console, escrevemos no 
+    // arquivo especificado à sua direita.
+    // Essa função é chamada ao final de cada uma das funções de processamento de imagem.
+    void printPPM() {
+        // padrão do PPM
         std::cout << "P3\n";
         std::cout << width << " " << height << "\n";
         std::cout << "255\n";
 
-/*         for (int i = 0; i < width * height; ++i) {
+        /*for (int i = 0; i < width * height; ++i) {
             std::cout << pixels[i].red << " " << pixels[i].green << " " << pixels[i].blue << std::endl;
-        } */
+        }*/
 
         for (int i = 0; i < height; ++i) {
             for (int j=0; j < width; ++j) {
-                std::cout << pixels[j].red << " " << pixels[j].green << " " << pixels[j].blue << " ";
-                if(j== width-1){
-                    std::cout << std::endl;
-                }
+                int index = i * width + j;
+                std::cout << pixels[index].red << " " << pixels[index].green << " " << pixels[index].blue << " ";
+                //std::cout << pixels[j].red << " " << pixels[j].green << " " << pixels[j].blue << " ";
             }
+            std::cout << std::endl;
         }
 
     }
@@ -205,61 +211,38 @@ private:
 };
 
 int main(int argc, char* argv[]) {
+    // caso tenha menos ou mais que 2 argumentos à esquerda de '<', enfatizar o erro
     if (argc != 2) {
         std::cout << "Usage: " << argv[0] << " <the_desired_function_name> <my_image_name> > <my_processed_image_name>" << std::endl;
-        return 1;
+        return 0;
     }
 
+    // pega o nome da função à ser executada, que está antes do '<'.
     std::string function_name = argv[1];
-    //std::string my_image;
-    //std::string my_processed_image_name;
 
-    //std::cin >> my_image;
-
+    // inicializando objeto e lendo o conteúdo do arquivo que está à direita de '<'
     Image image(0,0);
     image.readPPM();
 
-    // switch case não funciona pra string por padrão
-    /*  switch (function_name) {
-        case 'grayscale':
-            image.grayscale();
-            break;
-        case 'enlarge':
-            image.enlarge();
-            break;
-        case 'reduce':
-            image.reduce();
-            break;
-        case 'rotate':
-            image.rotate();
-            break;
-        case 'applySharpeningFilter':
-            image.applySharpeningFilter();
-            break;
-        case 'applyBlurringFilter':
-            image.applyBlurringFilter();
-            break;
-        default:
-            std::cerr << "Error: Invalid function name.\n";
-            return 0;
-    } */
-
+    // switch case não funciona pra string por padrão, teria de usar uma outra biblioteca, então preferi fazer um if else mesmo.
+    // lembrando que dentro de cada uma das funções abaixo, ao final chamam a função 'printPPM', que escreve o resultado do
+    // processamento no arquivo especificado na linha de comando, à direita de '>'.
     if (function_name == "grayscale") {
-        image.grayscale();//inputFile, outputFile);
+        image.grayscale();
     } else if (function_name == "enlarge") {
-        image.enlarge();//inputFile, outputFile);
+        image.enlarge();
     } else if (function_name == "reduce") {
-        image.reduce();//inputFile, outputFile);
+        image.reduce();
     } else if (function_name == "rotate") {
-        image.rotate();//inputFile, outputFile);
+        image.rotate();
     } else if (function_name == "applyBlurringFilter") {
-        image.applyBlurringFilter();//inputFile, outputFile);
+        image.applyBlurringFilter();
     } else if (function_name == "applySharpeningFilter") {
-        image.applySharpeningFilter();//inputFile, outputFile);
+        image.applySharpeningFilter();
     } else {
         std::cerr << "Error: Invalid function name.\n";
-        return 1;
+        return 0;
     }
 
-    return 0;
+    return 1;
 }

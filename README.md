@@ -26,10 +26,10 @@ Comandos que precisam funcionar:
 Testes que precisam passar:
 
 ```bash
-diff imgs_original/grayscale.ppm imgs_output/grayscale.ppm
+diff imgs_original/gray.ppm imgs_output/grayscale.ppm
 diff imgs_original/enlarge.ppm imgs_output/enlarge.ppm
 diff imgs_original/reduce.ppm imgs_output/reduce.ppm
 diff imgs_original/rotate.ppm imgs_output/rotate.ppm
-diff imgs_original/applyBlurringFilter.ppm imgs_output/applyBlurringFilter.ppm
-diff imgs_original/applySharpeningFilter.ppm imgs_output/applySharpeningFilter.ppm
+diff imgs_original/blur.ppm imgs_output/applyBlurringFilter.ppm
+diff imgs_original/sharp.ppm imgs_output/applySharpeningFilter.ppm
 ```
