@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <fstream>
+#include <sstream>
 
 struct Pixel {
     int red;
@@ -27,35 +28,38 @@ public:
         pixels[index].blue = b;
     }
 
-    void readPPM(const std::string& filename) {
-        std::ifstream file(filename);
+    void readPPM(){
         std::string format;
-        file >> format >> width >> height;
         int maxValue;
-        file >> maxValue;
+        std::cin >> format >> width >> height >> maxValue;
 
         pixels.resize(width * height);
 
         for (int i = 0; i < width * height; ++i) {
             int r, g, b;
-            file >> r >> g >> b;
+            std::cin >> r >> g >> b;
             setPixel(i % width, i / width, r, g, b);
         }
-
-        file.close();
     }
 
-    void writePPM(const std::string& filename) {
-        std::ofstream file(filename);
-        file << "P3\n";
-        file << width << " " << height << "\n";
-        file << "255\n";
+    void printPPM() {//const std::string& filename) {
+        std::cout << "P3\n";
+        std::cout << width << " " << height << "\n";
+        std::cout << "255\n";
 
-        for (int i = 0; i < width * height; ++i) {
-            file << pixels[i].red << " " << pixels[i].green << " " << pixels[i].blue << "\n";
+/*         for (int i = 0; i < width * height; ++i) {
+            std::cout << pixels[i].red << " " << pixels[i].green << " " << pixels[i].blue << std::endl;
+        } */
+
+        for (int i = 0; i < height; ++i) {
+            for (int j=0; j < width; ++j) {
+                std::cout << pixels[j].red << " " << pixels[j].green << " " << pixels[j].blue << " ";
+                if(j== width-1){
+                    std::cout << std::endl;
+                }
+            }
         }
 
-        file.close();
     }
 
     void grayscale() {
@@ -65,7 +69,8 @@ public:
             pixels[i].green = gray;
             pixels[i].blue = gray;
         }
-    }
+        printPPM();
+    } 
 
     void enlarge() {
         int newWidth = width * 2;
@@ -86,6 +91,7 @@ public:
         width = newWidth;
         height = newHeight;
         pixels = enlargedPixels;
+        printPPM();
     }
 
     void reduce() {
@@ -119,6 +125,7 @@ public:
         width = newWidth;
         height = newHeight;
         pixels = reducedPixels;
+        printPPM();
     }
 
     void rotate() {
@@ -137,6 +144,7 @@ public:
         width = newWidth;
         height = newHeight;
         pixels = rotatedPixels;
+        printPPM();
     }
 
     void applySharpeningFilter() {
@@ -146,6 +154,7 @@ public:
             {0, -1, 0}
         };
         applyFilter(filter);
+        printPPM();
     }
 
     void applyBlurringFilter() {
@@ -155,6 +164,7 @@ public:
             {1, 1, 1}
         };
         applyFilter(filter);
+        printPPM();
     }
 
 private:
@@ -194,56 +204,46 @@ private:
     }
 };
 
-void printMenu() {
-    std::cout << "========== Image Processing Program ==========" << std::endl;
-    std::cout << "1. Transform to Grayscale" << std::endl;
-    std::cout << "2. Enlarge Image" << std::endl;
-    std::cout << "3. Reduce Image" << std::endl;
-    std::cout << "4. Rotate Image" << std::endl;
-    std::cout << "5. Apply Sharpening Filter" << std::endl;
-    std::cout << "6. Apply Blurring Filter" << std::endl;
-    std::cout << "0. Exit" << std::endl;
-    std::cout << "=============================================" << std::endl;
-    std::cout << "Enter your choice: ";
-}
-
 int main(int argc, char* argv[]) {
-
-    // código que eu fiz para funcionar ./program_name function_name < imgs/original_img_name.ppm > imgs_output/processed_img_name.ppm
-    // exemplo que era pra funcionar: ./procimg rotate < imgs/galinhos.ppm > imgs_output/rotate.ppm
-    // exemplo que tá funcionando (função fora da classe): ./procimg printMenu < imgs/galinhos.ppm > imgs_output/printMenu.ppm
-    //Image image();
-    // Check if the correct number of arguments is provided
-    if (argc < 2) {
-        std::cerr << "Usage: " << argv[0] << " <function_name>\n";
+    if (argc != 2) {
+        std::cout << "Usage: " << argv[0] << " <the_desired_function_name> <my_image_name> > <my_processed_image_name>" << std::endl;
         return 1;
     }
 
-    // Extract command line argument for function name
     std::string function_name = argv[1];
+    //std::string my_image;
+    //std::string my_processed_image_name;
 
-    // Open input image file from standard input
-    std::ifstream inputFile;
-    inputFile.open("/dev/stdin");
-    if (!inputFile) {
-        std::cerr << "Error: Failed to open input image file.\n";
-        return 0;
-    }
+    //std::cin >> my_image;
 
-    // Open output image file from standard output
-    std::ofstream outputFile;
-    outputFile.open("/dev/stdout");
-    if (!outputFile) {
-        std::cerr << "Error: Failed to open output image file.\n";
-        return 0;
-    }
+    Image image(0,0);
+    image.readPPM();
 
+    // switch case não funciona pra string por padrão
+    /*  switch (function_name) {
+        case 'grayscale':
+            image.grayscale();
+            break;
+        case 'enlarge':
+            image.enlarge();
+            break;
+        case 'reduce':
+            image.reduce();
+            break;
+        case 'rotate':
+            image.rotate();
+            break;
+        case 'applySharpeningFilter':
+            image.applySharpeningFilter();
+            break;
+        case 'applyBlurringFilter':
+            image.applyBlurringFilter();
+            break;
+        default:
+            std::cerr << "Error: Invalid function name.\n";
+            return 0;
+    } */
 
-    if (function_name == "printMenu") {
-        printMenu();
-    }
-    /*
-    // Determine which image processing function to call based on function_name
     if (function_name == "grayscale") {
         image.grayscale();//inputFile, outputFile);
     } else if (function_name == "enlarge") {
@@ -260,68 +260,6 @@ int main(int argc, char* argv[]) {
         std::cerr << "Error: Invalid function name.\n";
         return 1;
     }
-    */
-
-    // Close input and output files (not necessary for standard input and output)
-    inputFile.close();
-    outputFile.close();
-
-    /* // o código que o Kaio fez inicialmente:
-    std::string filename;
-    std::cout << "Enter the filename of the image (PPM format): ";
-    std::cin >> filename;
-
-    Image image(0, 0);
-    image.readPPM(filename);
-
-    int choice = -1;
-
-    while (choice != 0) {
-        printMenu();
-        std::cin >> choice;
-
-        switch (choice) {
-            case 0:
-                std::cout << "Exiting program..." << std::endl;
-                break;
-            case 1:
-                image.grayscale();
-                std::cout << "Image transformed to grayscale." << std::endl;
-                break;
-            case 2:
-                image.enlarge();
-                std::cout << "Image enlarged." << std::endl;
-                break;
-            case 3:
-                image.reduce();
-                std::cout << "Image reduced." << std::endl;
-                break;
-            case 4:
-                image.rotate();
-                std::cout << "Image rotated." << std::endl;
-                break;
-            case 5:
-                image.applySharpeningFilter();
-                std::cout << "Sharpening filter applied to the image." << std::endl;
-                break;
-            case 6:
-                image.applyBlurringFilter();
-                std::cout << "Blurring filter applied to the image." << std::endl;
-                break;
-            default:
-                std::cout << "Invalid choice. Please try again." << std::endl;
-                break;
-        }
-    }
-
-    std::string outputFilename;
-    std::cout << "Enter the output filename (PPM format): ";
-    std::cin >> outputFilename;
-    image.writePPM(outputFilename);
-
-    std::cout << "Image saved to " << outputFilename << std::endl;
-
-    */
 
     return 0;
 }
