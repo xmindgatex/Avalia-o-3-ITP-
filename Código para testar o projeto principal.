@@ -1,0 +1,21 @@
+import subprocess
+
+# Compilar o programa
+subprocess.run(['g++', '-o', 'procimg', 'main.cpp'])
+
+# Função para executar o programa e comparar as saídas
+def run_test(function_name, input_image, expected_output_image):
+    subprocess.run(['./procimg', function_name, '<', input_image, '>', 'output.ppm'])
+    result = subprocess.run(['diff', expected_output_image, 'output.ppm'])
+    if result.returncode == 0:
+        print(f'Test for {function_name} passed.')
+    else:
+        print(f'Test for {function_name} failed.')
+
+# Executar os testes
+run_test('grayscale', 'imgs_original/gray.ppm', 'imgs_original/grayscale.ppm')
+run_test('enlarge', 'imgs_original/enlarge.ppm', 'imgs_original/enlarge.ppm')
+run_test('reduce', 'imgs_original/reduce.ppm', 'imgs_original/reduce.ppm')
+run_test('rotate', 'imgs_original/rotate.ppm', 'imgs_original/rotate.ppm')
+run_test('applySharpeningFilter', 'imgs_original/sharp.ppm', 'imgs_original/applySharpeningFilter.ppm')
+run_test('applyBlurringFilter', 'imgs_original/blur.ppm', 'imgs_original/applyBlurringFilter.ppm')
