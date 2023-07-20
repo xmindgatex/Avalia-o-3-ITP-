@@ -86,7 +86,7 @@ public:
         for (int y = 0; y < height; ++y) {
             for (int x = 0; x < width; ++x) {
                 int index = y * width + x;
-                int enlargedIndex = (y * 2) * newWidth + (x * 2);
+                int enlargedIndex = (y * 2) * newWidth + (x * 2); // Correção aqui
                 enlargedPixels[enlargedIndex] = pixels[index];
                 enlargedPixels[enlargedIndex + 1] = pixels[index];
                 enlargedPixels[enlargedIndex + newWidth] = pixels[index];
@@ -155,9 +155,9 @@ public:
 
     void applySharpeningFilter() {
         std::vector<std::vector<int>> filter = {
-            {0, -1, 0},
-            {-1, 5, -1},
-            {0, -1, 0}
+            {-1, -1, -1},
+            {-1,  9, -1},
+            {-1, -1, -1}
         };
         applyFilter(filter);
         printPPM();
